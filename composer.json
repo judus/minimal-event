@@ -24,7 +24,7 @@
   "autoload-dev": {
     "psr-4": {
       "Maduser\\Minimal\\Event\\Tests\\": "tests/",
-      "Maduser\\Minimal\\Event\\Stubs\\": "stubs/",
+      "Maduser\\Minimal\\Event\\Stubs\\": "stubs/"
     }
   }
 }
