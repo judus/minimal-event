@@ -1,0 +1,26 @@
+{
+  "name": "minimal/event",
+  "description": "Minimal component",
+  "keywords": [
+    "minimal",
+    "component"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Julien Duseyau",
+      "email": "julien.duseyau@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Maduser\\Minimal\\Event\\Tests\\": "tests/",
+      "Maduser\\Minimal\\Event\\Stubs\\": "stubs/",
+      "Maduser\\Minimal\\Event\\": "src/"
+    }
+  }
+}
