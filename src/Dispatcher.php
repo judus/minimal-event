@@ -71,4 +71,9 @@ class Dispatcher implements DispatcherInterface
             $this->events[$name] = [];
         }
     }
+
+    public function events()
+    {
+        return $this->events;
+    }
 }
