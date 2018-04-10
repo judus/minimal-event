@@ -31,7 +31,7 @@ class DispatcherTest extends TestCase
     /** @test */
     public function dispatchTest()
     {
-        $this->dispatcher->addSubscriber($this->subscriber);
+        $this->dispatcher->register($this->subscriber);
         $this->dispatcher->dispatch('test-event');
         $this->assertEquals(1, $this->subscriber->getCounter());
     }

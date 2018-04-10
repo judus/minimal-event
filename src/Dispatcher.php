@@ -13,14 +13,25 @@ class Dispatcher implements DispatcherInterface
     /**
      * @var array
      */
-    private $subscribers = [];
+    private $events = [];
 
     /**
      * @param SubscriberInterface $subscriber
+     *
+     * @return array
      */
-    public function addSubscriber(SubscriberInterface $subscriber)
+    public function register(SubscriberInterface $subscriber)
     {
-        $this->subscribers[] = $subscriber;
+        $class = get_class($subscriber);
+        $events = $subscriber->getEvents();
+
+        foreach($events as $event => $actions)
+        {
+            $this->registerEvent($event);
+            $this->events[$event][$class] = $subscriber;
+        }
+
+        return $this->events;
     }
 
     /**
@@ -29,12 +40,35 @@ class Dispatcher implements DispatcherInterface
      */
     public function dispatch(string $eventName, $data = null)
     {
-        foreach ($this->subscribers as $subscriber)
+        foreach ($this->getEvent($eventName) as $subscriber)
         {
-            foreach ($subscriber->getSubscribedEvent($eventName) as $action)
-            {
-                $subscriber->{$action}($data);
+            $actions = $subscriber->getEventActions($eventName);
+            $actions = is_array($actions) ? $actions : [$actions];
+
+            foreach ($actions as $action) {
+                $data = is_array($data) ? $data : [$data];
+                call_user_func_array([$subscriber, $action], $data);
             }
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array
+     */
+    public function getEvent(string $name): array
+    {
+        return isset($this->events[$name]) ? $this->events[$name] : [];
+    }
+
+    /**
+     * @param string $name
+     */
+    protected function registerEvent(string $name)
+    {
+        if (!isset($this->events[$name])) {
+            $this->events[$name] = [];
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Maduser\Minimal\Event\Contracts;
 
 interface DispatcherInterface
 {
-    public function addSubscriber(SubscriberInterface $subscriber);
+    public function register(SubscriberInterface $subscriber);
 
     /**
      * @param string $eventName
