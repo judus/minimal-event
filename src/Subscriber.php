@@ -29,6 +29,8 @@ abstract class Subscriber implements SubscriberInterface
      */
     public function getEventActions($eventName)
     {
-        return isset($this->events[$eventName]) ? $this->events[$eventName] : [];
+        $events = isset($this->events[$eventName]) ? $this->events[$eventName] : [];
+
+        return is_array($events) ? $events : [$events];
     }
 }
