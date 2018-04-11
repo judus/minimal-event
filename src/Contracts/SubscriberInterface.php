@@ -38,7 +38,7 @@ namespace Maduser\Minimal\Event\Contracts;
 
 interface SubscriberInterface
 {
-    public function getEvents();
-
     public function getEventActions($eventName);
+
+    public function handle($eventName, $data = null);
 }

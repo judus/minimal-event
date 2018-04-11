@@ -40,16 +40,14 @@ class Dispatcher implements DispatcherInterface
      */
     public function dispatch(string $eventName, $data = null)
     {
+        $results = [];
+
         foreach ($this->getEvent($eventName) as $subscriber)
         {
-            $actions = $subscriber->getEventActions($eventName);
-            $actions = is_array($actions) ? $actions : [$actions];
-
-            foreach ($actions as $action) {
-                $data = is_array($data) ? $data : [$data];
-                call_user_func_array([$subscriber, $action], $data);
-            }
+            $results[get_class($subscriber)] = $subscriber->handle($eventName, $data);
         }
+
+        return $results;
     }
 
     /**
