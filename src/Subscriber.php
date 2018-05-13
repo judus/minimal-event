@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Event;
 
+use Maduser\Minimal\Framework\Facades\Event;
 use Maduser\Minimal\Event\Contracts\SubscriberInterface;
 
 /**
@@ -58,13 +59,13 @@ abstract class Subscriber implements SubscriberInterface
             $data = is_array($data) ? $data : [$data];
 
             foreach ($actions as $action) {
-                if ($result = $this->execute($action, $data)) {
+                if ($result = $this->call($eventName, $action, $data)) {
                     $results[$action] = $result;
                 }
             }
         }
 
-        return count($results) === 1 ? $results[0] : $results;
+        return count($results) === 1 ? reset($results) : $results;
     }
 
     /**
@@ -75,12 +76,29 @@ abstract class Subscriber implements SubscriberInterface
      *
      * @return mixed|null
      */
-    protected function execute($method, $data = null)
+    protected function call($eventName, $method, $data = null)
     {
         if (method_exists($this, $method)) {
-            return call_user_func_array([$this, $method], $data);
+            $result = call_user_func_array([$this, $method], $data);
+            return $result;
         }
 
         return null;
+    }
+
+    /**
+     * @param $haystack
+     * @param $needle
+     *
+     * @return bool
+     */
+    protected function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 }

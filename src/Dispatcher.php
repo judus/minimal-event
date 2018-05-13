@@ -20,27 +20,42 @@ class Dispatcher implements DispatcherInterface
      *
      * @return array
      */
-    public function register(SubscriberInterface $subscriber)
+    public function register($subscribers)
+    {
+        is_array($subscribers) || $subscribers = [$subscribers];
+
+        foreach ($subscribers as $subscriber) {
+            $this->registerSubscriber($subscriber);
+        }
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     *
+     * @return array
+     */
+    public function registerSubscriber(SubscriberInterface $subscriber)
     {
         $class = get_class($subscriber);
         $events = $subscriber->getEvents();
 
-        foreach($events as $event => $actions)
-        {
+        foreach ($events as $event => $actions) {
             $this->registerEvent($event);
             $this->events[$event][$class] = $subscriber;
         }
-
-        return $this->events;
     }
 
     /**
      * @param string $eventName
      * @param mixed $data
      */
-    public function dispatch(string $eventName, $data = null)
+    public function dispatch(string $eventName, $data = null, $dispatched = false)
     {
         $results = [];
+
+        if (!$dispatched) {
+            $this->dispatch('event.dispatch', $eventName, true);
+        }
 
         foreach ($this->getEvent($eventName) as $subscriber)
         {
