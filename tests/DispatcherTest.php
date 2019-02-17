@@ -22,7 +22,7 @@ class DispatcherTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp():void
     {
         $this->dispatcher = new Dispatcher;
         $this->subscriber = new SubscriberStub;
