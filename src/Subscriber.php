@@ -101,4 +101,18 @@ abstract class Subscriber implements SubscriberInterface
 
         return (substr($haystack, -$length) === $needle);
     }
+
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [get_class($this) => function() {
+            $array = [];
+            foreach ($this->events as $key => $subscriber) {
+               $array[$key] = get_class($subscriber);
+            }
+        }];
+    }
 }
